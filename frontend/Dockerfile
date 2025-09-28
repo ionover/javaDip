@@ -1,0 +1,11 @@
+FROM nginx:1.20.2
+LABEL MAINTAINER="ionov <>"
+
+COPY init/init_config.sh /opt
+COPY init/nginx_http.conf /opt
+COPY init/nginx_https.conf /opt
+COPY dist /usr/share/nginx/html
+
+EXPOSE 80 443
+
+CMD /opt/init_config.sh && nginx -g 'daemon off;'
