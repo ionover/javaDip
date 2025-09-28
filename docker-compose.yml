@@ -1,8 +1,12 @@
 version: '3.7'
 
+name: javadip
+
 services:
   backend:
     build: backend
+    container_name: javadip-backend
 
   frontend:
     build: frontend
+    container_name: javadip-frontend
