@@ -6,7 +6,11 @@ services:
   backend:
     build: backend
     container_name: javadip-backend
+    ports:
+      - "8084:8084"
 
   frontend:
     build: frontend
     container_name: javadip-frontend
+    ports:
+      - "8080:80"
