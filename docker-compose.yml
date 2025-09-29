@@ -6,6 +6,9 @@ services:
   backend:
     build: backend
     container_name: javadip-backend
+    environment:
+      SPRING_FLYWAY_USER: ${DB_USER}
+      SPRING_FLYWAY_PASSWORD: ${DB_PASS}
     ports:
       - "8084:8084"
     volumes:
@@ -22,3 +25,10 @@ services:
     container_name: javadip-postgres
     ports:
       - "5432:5432"
+    environment:
+      POSTGRES_DB: backend_db
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      PGUSER: ${DB_USER}
+    volumes:
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql

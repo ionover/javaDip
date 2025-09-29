@@ -11,4 +11,4 @@ CREATE TABLE IF NOT EXISTS data.files
     ) TABLESPACE pg_default;
 
 ALTER TABLE data.files
-    OWNER to pgAdmin;
+    OWNER to ${db_owner};
