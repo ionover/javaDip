@@ -1,7 +1,4 @@
 # javaDip
-cd frontend
+cd scripts
 
-
-
-mvn clean install
-
+./startAll.sh
