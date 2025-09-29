@@ -5,6 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.backend.FilesDto;
 import ru.mycrg.backend.FilesEntity;
 import ru.mycrg.backend.repository.FileRepository;
+import ru.mycrg.backend.util.FileUtils;
 
 import java.util.UUID;
 
@@ -33,8 +34,13 @@ public class FilesService {
 
     private String generateFileName(MultipartFile file) {
         int hashCode = file.hashCode();
-
-        return String.format("%s.%s", hashCode, UUID.randomUUID());
+        String extension = FileUtils.extractExtension(file.getOriginalFilename());
+        
+        if (extension != null && !extension.isEmpty()) {
+            return String.format("%s.%s.%s", hashCode, UUID.randomUUID(), extension);
+        } else {
+            return String.format("%s.%s", hashCode, UUID.randomUUID());
+        }
     }
 
     public FilesDto deleteFile(UUID id) {
