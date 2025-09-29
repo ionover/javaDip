@@ -8,9 +8,17 @@ services:
     container_name: javadip-backend
     ports:
       - "8084:8084"
+    volumes:
+      - /opt/javaDip/files_storage:/opt/files_storage
 
   frontend:
     build: frontend
     container_name: javadip-frontend
     ports:
       - "8080:80"
+
+  postgres:
+    image: postgres:17
+    container_name: javadip-postgres
+    ports:
+      - "5432:5432"
