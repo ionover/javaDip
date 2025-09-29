@@ -22,7 +22,7 @@ public class FileController {
     }
 
     @GetMapping
-    public String getFile(@RequestParam UUID id) {
+    public String getFile(@RequestParam("id") UUID id) {
 
         return "helloworld";
     }
@@ -40,10 +40,10 @@ public class FileController {
         return "Hello World";
     }
 
-    @DeleteMapping("/{fileId}")
-    public ResponseEntity<FilesDto> deleteFile(@PathVariable String fileId) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<FilesDto> deleteFile(@PathVariable("id") UUID id) {
 
-        FilesDto filesDto = filesService.deleteFile(fileId);
+        FilesDto filesDto = filesService.deleteFile(id);
 
         return ResponseEntity.status(NO_CONTENT).body(filesDto);
     }

@@ -43,8 +43,8 @@ public class FilesService {
         }
     }
 
-    public FilesDto deleteFile(String id) {
-        FilesEntity entity = fileRepository.findById(UUID.fromString(id))
+    public FilesDto deleteFile(UUID id) {
+        FilesEntity entity = fileRepository.findById(id)
                                            .orElseThrow(
                                                    () -> new IllegalArgumentException("File not found with id: " + id));
 
