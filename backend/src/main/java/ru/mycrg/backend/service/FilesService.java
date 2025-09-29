@@ -35,21 +35,22 @@ public class FilesService {
     private String generateFileName(MultipartFile file) {
         int hashCode = file.hashCode();
         String extension = FileUtils.extractExtension(file.getOriginalFilename());
-        
+
         if (extension != null && !extension.isEmpty()) {
-            return String.format("%s.%s.%s", hashCode, UUID.randomUUID(), extension);
+            return String.format("%s_%s.%s", hashCode, UUID.randomUUID(), extension);
         } else {
-            return String.format("%s.%s", hashCode, UUID.randomUUID());
+            return String.format("%s_%s", hashCode, UUID.randomUUID());
         }
     }
 
-    public FilesDto deleteFile(UUID id) {
-        FilesEntity entity = fileRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("File not found with id: " + id));
-        
+    public FilesDto deleteFile(String id) {
+        FilesEntity entity = fileRepository.findById(UUID.fromString(id))
+                                           .orElseThrow(
+                                                   () -> new IllegalArgumentException("File not found with id: " + id));
+
         entity.setIsDeleted(true);
         FilesEntity savedEntity = fileRepository.save(entity);
-        
+
         return new FilesDto(savedEntity);
     }
 }

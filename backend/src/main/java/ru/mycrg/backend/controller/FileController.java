@@ -40,10 +40,10 @@ public class FileController {
         return "Hello World";
     }
 
-    @DeleteMapping
-    public ResponseEntity<FilesDto> deleteFile(@RequestParam UUID id) {
+    @DeleteMapping("/{fileId}")
+    public ResponseEntity<FilesDto> deleteFile(@PathVariable String fileId) {
 
-        FilesDto filesDto = filesService.deleteFile(id);
+        FilesDto filesDto = filesService.deleteFile(fileId);
 
         return ResponseEntity.status(NO_CONTENT).body(filesDto);
     }
