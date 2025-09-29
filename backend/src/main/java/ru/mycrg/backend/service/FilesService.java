@@ -36,4 +36,8 @@ public class FilesService {
 
         return String.format("%s.%s", hashCode, UUID.randomUUID());
     }
+
+    public FilesDto deleteFile(UUID id) {
+        return null;
+    }
 }

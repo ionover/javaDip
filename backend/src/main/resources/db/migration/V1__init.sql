@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS data.files
     path               character varying(500) NOT NULL,
     created_by         character varying(50),
     created_at         timestamp without time zone,
+    is_deleted         boolean,
     CONSTRAINT files_pkey PRIMARY KEY (id)
     ) TABLESPACE pg_default;
 

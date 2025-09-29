@@ -1,11 +1,15 @@
 package ru.mycrg.backend.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.backend.FilesDto;
 import ru.mycrg.backend.service.FilesService;
+
+import java.util.UUID;
+
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequestMapping("/file")
@@ -18,8 +22,9 @@ public class FileController {
     }
 
     @GetMapping
-    public String getFile() {
-        return "Hello World";
+    public String getFile(@RequestParam UUID id) {
+
+        return "helloworld";
     }
 
     @PostMapping
@@ -27,7 +32,7 @@ public class FileController {
 
         FilesDto filesDto = filesService.createFile(file);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(filesDto);
+        return ResponseEntity.status(CREATED).body(filesDto);
     }
 
     @PutMapping
@@ -36,7 +41,10 @@ public class FileController {
     }
 
     @DeleteMapping
-    public String deleteFile() {
-        return "Hello World";
+    public ResponseEntity<FilesDto> deleteFile(@RequestParam UUID id) {
+
+        FilesDto filesDto = filesService.deleteFile(id);
+
+        return ResponseEntity.status(NO_CONTENT).body(filesDto);
     }
 }
