@@ -10,5 +10,5 @@ CREATE TABLE IF NOT EXISTS data.files
     CONSTRAINT files_pkey PRIMARY KEY (id)
     ) TABLESPACE pg_default;
 
-ALTER TABLE data.files
-    OWNER to ${db_owner};
+-- ALTER TABLE data.files
+--     OWNER to ${db_owner};

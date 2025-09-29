@@ -11,6 +11,8 @@ services:
       SPRING_FLYWAY_PASSWORD: ${DB_PASS}
     ports:
       - "8084:8084"
+    depends_on:
+      - postgres
     volumes:
       - /opt/javaDip/files_storage:/opt/files_storage
 
