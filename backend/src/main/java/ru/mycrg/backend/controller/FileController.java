@@ -23,7 +23,7 @@ public class FileController {
     }
 
     @PostMapping
-    public ResponseEntity<FilesDto> postFile(@RequestBody MultipartFile file) {
+    public ResponseEntity<FilesDto> postFile(@RequestParam("file") MultipartFile file) {
 
         FilesDto filesDto = filesService.createFile(file);
 

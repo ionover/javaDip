@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.backend.FilesException;
 
+import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,11 +24,18 @@ public class FilesStorageService {
     private final Path mainStoragePath;
 
     @Autowired
-    public FilesStorageService(Environment environment,
-                               Path mainStoragePath) {
-        String mainStoragePath = environment.getRequiredProperty("back-options.filesPath");
+    public FilesStorageService(Environment environment) {
+        String storagePath = environment.getRequiredProperty("back-options.filesPath");
 
-        this.mainStoragePath = Paths.get(mainStoragePath).toAbsolutePath().normalize();
+        this.mainStoragePath = Paths.get(storagePath).toAbsolutePath().normalize();
+
+        // Создаем директорию для хранения файлов, если она не существует
+        try {
+            Files.createDirectories(this.mainStoragePath);
+        } catch (IOException e) {
+            log.error("Не удалось создать директорию для хранения файлов: {}", this.mainStoragePath, e);
+            throw new FilesException("Не удалось создать директорию для хранения файлов");
+        }
     }
 
     public String copyToStorage(MultipartFile file, String fileName) {

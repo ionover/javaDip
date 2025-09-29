@@ -2,6 +2,7 @@ package ru.mycrg.backend;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -48,6 +49,27 @@ public class FilesEntity {
         this.path = path;
         this.createdBy = createdBy;
         this.createdAt = LocalDateTime.now();
+    }
+
+    public FilesEntity(MultipartFile file, String path) {
+        String originalFilename = file.getOriginalFilename();
+        this.title = (originalFilename != null && !originalFilename.isEmpty()) ? originalFilename : "unknown_file";
+        this.size = file.getSize();
+        this.extension = extractExtension(originalFilename);
+        this.path = path;
+        this.createdBy = "system"; // можно оставить пустым или задать дефолтное значение
+        this.createdAt = LocalDateTime.now();
+    }
+
+    private String extractExtension(String filename) {
+        if (filename == null || filename.isEmpty()) {
+            return null;
+        }
+        int lastDotIndex = filename.lastIndexOf('.');
+        if (lastDotIndex > 0 && lastDotIndex < filename.length() - 1) {
+            return filename.substring(lastDotIndex + 1);
+        }
+        return null;
     }
 
     // Getters and Setters

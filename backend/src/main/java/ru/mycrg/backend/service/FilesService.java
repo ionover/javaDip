@@ -3,6 +3,7 @@ package ru.mycrg.backend.service;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.backend.FilesDto;
+import ru.mycrg.backend.FilesEntity;
 import ru.mycrg.backend.repository.FileRepository;
 
 import java.util.UUID;
@@ -24,8 +25,8 @@ public class FilesService {
         }
 
         String path = filesStorageService.copyToStorage(file, generateFileName(file));
-        FileRepository entity = new FileRepository(file, path);
-        FileRepository savedEntity = fileRepository.save(entity);
+        FilesEntity entity = new FilesEntity(file, path);
+        FilesEntity savedEntity = fileRepository.save(entity);
 
         return new FilesDto(savedEntity);
     }
