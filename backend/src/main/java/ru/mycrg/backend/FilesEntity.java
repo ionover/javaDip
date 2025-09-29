@@ -38,6 +38,9 @@ public class FilesEntity {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted = false;
+
     // Constructors
     public FilesEntity() {
     }
@@ -129,6 +132,14 @@ public class FilesEntity {
         this.createdAt = createdAt;
     }
 
+    public Boolean getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
     @PrePersist
     protected void onCreate() {
         if (createdAt == null) {
@@ -146,6 +157,7 @@ public class FilesEntity {
                 ", path='" + path + '\'' +
                 ", createdBy='" + createdBy + '\'' +
                 ", createdAt=" + createdAt +
+                ", isDeleted=" + isDeleted +
                 '}';
     }
 }

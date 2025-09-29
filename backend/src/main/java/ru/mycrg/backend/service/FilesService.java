@@ -38,6 +38,12 @@ public class FilesService {
     }
 
     public FilesDto deleteFile(UUID id) {
-        return null;
+        FilesEntity entity = fileRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("File not found with id: " + id));
+        
+        entity.setIsDeleted(true);
+        FilesEntity savedEntity = fileRepository.save(entity);
+        
+        return new FilesDto(savedEntity);
     }
 }

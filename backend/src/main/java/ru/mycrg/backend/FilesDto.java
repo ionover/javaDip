@@ -12,6 +12,7 @@ public class FilesDto {
     private String path;
     private String createdBy;
     private LocalDateTime createdAt;
+    private Boolean isDeleted;
 
     public FilesDto() {
     }
@@ -24,6 +25,7 @@ public class FilesDto {
         this.path = entity.getPath();
         this.createdBy = entity.getCreatedBy();
         this.createdAt = entity.getCreatedAt();
+        this.isDeleted = entity.getIsDeleted();
     }
 
     // Getters and Setters
@@ -81,5 +83,13 @@ public class FilesDto {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Boolean getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Boolean isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }
