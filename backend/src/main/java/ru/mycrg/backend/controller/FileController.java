@@ -9,7 +9,6 @@ import ru.mycrg.backend.service.FilesService;
 import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequestMapping("/file")
@@ -41,10 +40,10 @@ public class FileController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<FilesDto> deleteFile(@PathVariable("id") UUID id) {
+    public ResponseEntity<Object> deleteFile(@PathVariable("id") UUID id) {
 
-        FilesDto filesDto = filesService.deleteFile(id);
+        filesService.deleteFile(id);
 
-        return ResponseEntity.status(NO_CONTENT).body(filesDto);
+        return ResponseEntity.noContent().build();
     }
 }
