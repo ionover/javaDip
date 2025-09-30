@@ -55,9 +55,9 @@ public class FilesEntity {
         this.createdAt = LocalDateTime.now();
     }
 
-    public FilesEntity(MultipartFile file, String path) {
+    public FilesEntity(String title, MultipartFile file, String path) {
         String originalFilename = file.getOriginalFilename();
-        this.title = (originalFilename != null && !originalFilename.isEmpty()) ? originalFilename : "unknown_file";
+        this.title = title;
         this.size = file.getSize();
         this.extension = FileUtils.extractExtension(originalFilename);
         this.path = path;

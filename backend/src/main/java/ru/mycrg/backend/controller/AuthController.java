@@ -38,7 +38,7 @@ public class AuthController {
             String token = jwtService.generateToken(user.getLogin(), user.getId().toString());
 
             user.setJwtToken(token);
-            userService.save(userDto);
+            userService.save(user);
 
             Map<String, String> response = new HashMap<>();
             response.put("auth-token", token);

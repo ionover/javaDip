@@ -23,13 +23,13 @@ public class FilesService {
         this.fileRepository = fileRepository;
     }
 
-    public FilesDto createFile(MultipartFile file) {
+    public FilesDto createFile(String fileName, MultipartFile file) {
         if (file.isEmpty()) {
             throw new IllegalArgumentException("File is empty");
         }
 
         String path = filesStorageService.copyToStorage(file, generateFileName(file));
-        FilesEntity entity = new FilesEntity(file, path);
+        FilesEntity entity = new FilesEntity(fileName, file, path);
         FilesEntity savedEntity = fileRepository.save(entity);
 
         return new FilesDto(savedEntity);

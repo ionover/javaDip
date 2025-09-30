@@ -22,13 +22,13 @@ public class UserService {
         return usersEntity.map(UserDto::new);
     }
 
-    public void save(Optional<UserDto> userDto) {
-        UserDto userDtoToSave = null;
+    public void save(UserDto userDto) {
+        UsersEntity userEntity = new UsersEntity();
+        userEntity.setId(userDto.getId());
+        userEntity.setLogin(userDto.getLogin());
+        userEntity.setPassword(userDto.getLogin());
+        userEntity.setJwtToken(userDto.getJwtToken());
 
-        if (userDto.isPresent()) {
-            userDtoToSave = userDto.get();
-        }
-
-        UserRepository user = userRepository.save(userDtoToSave);
+        userRepository.save(userEntity);
     }
 }
