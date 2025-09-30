@@ -43,7 +43,12 @@ public class JwtService {
     public boolean isTokenValid(String token) {
         token = token.trim();
 
-        log.debug("Проверяем валидность токена: {}", token);
+        // Убираем префикс "Bearer " если он есть
+        if (token.startsWith("Bearer ")) {
+            token = token.replace("Bearer ", "");
+        }
+
+        log.info("Проверяем валидность токена: {}", token);
 
         try {
             Jwts.parserBuilder()
@@ -51,8 +56,12 @@ public class JwtService {
                 .build()
                 .parseClaimsJws(token);
 
+            log.info("Токен валиден");
+
             return true;
         } catch (Exception e) {
+            log.error("Ошибка валидации токена: {}", e.getMessage(), e);
+
             return false;
         }
     }
