@@ -27,7 +27,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<Map<String, String>> login(@RequestBody LoginDto loginDto) {
         Optional<UserDto> userDto = userService.findByLoginAndPassword(
                 loginDto.getLogin(),
                 loginDto.getPassword()
