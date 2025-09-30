@@ -19,11 +19,11 @@ public class UsersEntity {
     private UUID id;
 
     @Column(name = "login", nullable = false)
-    private String title;
+    private String login;
 
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "token")
-    private String token;
+    @Column(name = "jwttoken")
+    private String jwtToken;
 }
