@@ -44,9 +44,9 @@ public class JwtService {
                 .build()
                 .parseClaimsJws(token);
 
-            return false;
-        } catch (Exception e) {
             return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 

@@ -25,7 +25,7 @@ public class FilesListController {
 
     @GetMapping("/list")
     public ResponseEntity<List<FilesDto>> getFiles(@RequestHeader("auth-token") String authToken,
-                                                   @RequestParam(required = false) Integer limit) {
+                                                   @RequestParam(value = "limit", required = false) Integer limit) {
 
         if (!jwtService.isTokenValid(authToken)) {
             throw new AuthException("Невалидный токен");
