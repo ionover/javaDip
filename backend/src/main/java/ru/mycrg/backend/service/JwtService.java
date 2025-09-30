@@ -38,6 +38,8 @@ public class JwtService {
     }
 
     public boolean isTokenValid(String token) {
+        token = token.trim();
+
         try {
             Jwts.parserBuilder()
                 .setSigningKey(key)

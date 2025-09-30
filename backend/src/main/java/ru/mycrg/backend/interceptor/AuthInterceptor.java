@@ -37,10 +37,6 @@ public class AuthInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        // Добавляем информацию о пользователе в request для дальнейшего использования
-        request.setAttribute("userLogin", jwtService.getLoginFromToken(token));
-        request.setAttribute("userId", jwtService.getUserIdFromToken(token));
-
         return true;
     }
 }

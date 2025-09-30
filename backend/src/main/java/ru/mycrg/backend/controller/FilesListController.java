@@ -28,7 +28,7 @@ public class FilesListController {
                                                    @RequestParam(value = "limit", required = false) Integer limit) {
 
         if (!jwtService.isTokenValid(authToken)) {
-            throw new AuthException("Невалидный токен");
+            throw new AuthException("Невалидный токен в получении листа");
         }
 
         List<FilesDto> filesDtoList = filesService.getAllWithLimit(limit);
