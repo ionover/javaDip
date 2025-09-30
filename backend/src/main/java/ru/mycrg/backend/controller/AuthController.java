@@ -1,14 +1,13 @@
 package ru.mycrg.backend.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import ru.mycrg.backend.dto.LoginDto;
-import ru.mycrg.backend.entity.UsersEntity;
-import ru.mycrg.backend.repository.UserRepository;
+import ru.mycrg.backend.dto.UserDto;
+import ru.mycrg.backend.exception.AuthException;
 import ru.mycrg.backend.service.JwtService;
 import ru.mycrg.backend.service.UserService;
 
@@ -29,28 +28,24 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
-        Optional<UsersEntity> userOpt = userService.findByLoginAndPassword(
+        Optional<UserDto> userDto = userService.findByLoginAndPassword(
                 loginDto.getLogin(),
                 loginDto.getPassword()
         );
 
-        if (userOpt.isPresent()) {
-            UsersEntity user = userOpt.get();
+        if (userDto.isPresent()) {
+            UserDto user = userDto.get();
             String token = jwtService.generateToken(user.getLogin(), user.getId().toString());
 
             user.setJwtToken(token);
-            userService.save(user);
+            userService.save(userDto);
 
             Map<String, String> response = new HashMap<>();
             response.put("auth-token", token);
 
             return ResponseEntity.ok(response);
         } else {
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("message", "Bad credentials");
-            errorResponse.put("id", 400);
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+            throw new AuthException("Invalid login or password");
         }
     }
 

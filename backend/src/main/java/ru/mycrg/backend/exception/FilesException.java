@@ -1,4 +1,4 @@
-package ru.mycrg.backend;
+package ru.mycrg.backend.exception;
 
 public class FilesException extends RuntimeException {
 

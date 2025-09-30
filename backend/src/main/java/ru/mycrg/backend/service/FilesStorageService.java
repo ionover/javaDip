@@ -7,7 +7,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.backend.dto.FilesDto;
-import ru.mycrg.backend.FilesException;
+import ru.mycrg.backend.exception.FilesException;
 
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
