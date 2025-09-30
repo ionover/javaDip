@@ -1,5 +1,7 @@
 package ru.mycrg.backend.service;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.backend.FilesDto;
@@ -54,8 +56,12 @@ public class FilesService {
     }
 
     public List<FilesDto> getAllWithLimit(Integer limit) {
-        List<FilesEntity> filesEntities = fileRepository.getAllWithLimit(limit);
+        Pageable pageable = limit != null ? PageRequest.of(0, limit) : Pageable.unpaged();
 
-        return filesDtoList;
+        List<FilesEntity> filesEntities = fileRepository.findAllNotDeleted(pageable);
+
+        return filesEntities.stream()
+                            .map(FilesDto::new)
+                            .toList();
     }
 }

@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.mycrg.backend.FilesDto;
 import ru.mycrg.backend.service.FilesService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -20,7 +19,7 @@ public class FilesListController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<FilesDto>> getFiles(@RequestParam Integer limit) {
+    public ResponseEntity<List<FilesDto>> getFiles(@RequestParam(required = false) Integer limit) {
 
         List<FilesDto> filesDtoList = filesService.getAllWithLimit(limit);
 
