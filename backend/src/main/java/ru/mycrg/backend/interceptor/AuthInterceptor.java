@@ -37,14 +37,6 @@ public class AuthInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        if (jwtService.isTokenValid(token)) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.setContentType("application/json");
-            response.getWriter().write("{\"message\":\"Invalid or expired token\",\"id\":401}");
-
-            return false;
-        }
-
         // Добавляем информацию о пользователе в request для дальнейшего использования
         request.setAttribute("userLogin", jwtService.getLoginFromToken(token));
         request.setAttribute("userId", jwtService.getUserIdFromToken(token));
