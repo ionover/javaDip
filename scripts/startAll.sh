@@ -4,7 +4,7 @@ echo "Stopping all containers..."
 ./estopAll.sh
 
 echo "Building frontend..."
-./createNewFront.sh
+#./createNewFront.sh
 
 echo "Building backend..."
 ./buildBack.sh

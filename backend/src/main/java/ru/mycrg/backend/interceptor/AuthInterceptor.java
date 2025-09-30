@@ -16,7 +16,8 @@ public class AuthInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+            throws Exception {
         // Пропускаем OPTIONS запросы (CORS preflight)
         if ("OPTIONS".equals(request.getMethod())) {
             return true;
@@ -28,7 +29,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         }
 
         String token = request.getHeader("auth-token");
-        
+
         if (token == null || token.isEmpty()) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");
@@ -37,6 +38,6 @@ public class AuthInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        return true;
+        return jwtService.isTokenValid(token);
     }
 }
