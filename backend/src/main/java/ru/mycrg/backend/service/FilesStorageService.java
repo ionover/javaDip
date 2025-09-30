@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ru.mycrg.backend.FilesDto;
 import ru.mycrg.backend.FilesException;
 
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
@@ -61,5 +63,9 @@ public class FilesStorageService {
 
             throw new FilesException(msg);
         }
+    }
+
+    public List<FilesDto> getAllWithLimit(Integer limit) {
+        return null;
     }
 }

@@ -7,6 +7,7 @@ import ru.mycrg.backend.FilesEntity;
 import ru.mycrg.backend.repository.FileRepository;
 import ru.mycrg.backend.util.FileUtils;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -50,5 +51,11 @@ public class FilesService {
 
         entity.setIsDeleted(true);
         fileRepository.save(entity);
+    }
+
+    public List<FilesDto> getAllWithLimit(Integer limit) {
+        List<FilesEntity> filesEntities = fileRepository.getAllWithLimit(limit);
+
+        return filesDtoList;
     }
 }
