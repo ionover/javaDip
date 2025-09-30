@@ -4,7 +4,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.backend.dto.FilesDto;
-import ru.mycrg.backend.exception.AuthException;
 import ru.mycrg.backend.service.FilesService;
 import ru.mycrg.backend.service.JwtService;
 
@@ -31,13 +30,8 @@ public class FileController {
     }
 
     @PostMapping
-    public ResponseEntity<FilesDto> postFile(@RequestHeader("auth-token") String authToken,
-                                             @RequestParam(value = "filename", required = false) String filename,
+    public ResponseEntity<FilesDto> postFile(@RequestParam(value = "filename", required = false) String filename,
                                              @RequestParam("file") MultipartFile file) {
-
-        if (!jwtService.isTokenValid(authToken)) {
-            throw new AuthException("Невалидный токен");
-        }
 
         FilesDto filesDto = filesService.createFile(filename, file);
 
