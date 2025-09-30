@@ -35,7 +35,7 @@ public class FileController {
                                              @RequestParam(value = "filename", required = false) String filename,
                                              @RequestParam("file") MultipartFile file) {
 
-        if (jwtService.isTokenValid(authToken)) {
+        if (!jwtService.isTokenValid(authToken)) {
             throw new AuthException("Невалидный токен");
         }
 
