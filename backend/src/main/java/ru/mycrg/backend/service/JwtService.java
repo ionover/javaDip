@@ -37,7 +37,7 @@ public class JwtService {
                    .compact();
     }
 
-    public boolean validateToken(String token) {
+    public boolean isTokenValid(String token) {
         try {
             Jwts.parserBuilder()
                 .setSigningKey(key)
