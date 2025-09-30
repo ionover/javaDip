@@ -2,7 +2,6 @@ package ru.mycrg.backend.interceptor;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import ru.mycrg.backend.service.JwtService;
@@ -38,7 +37,7 @@ public class AuthInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        if (!jwtService.validateToken(token)) {
+        if (jwtService.validateToken(token)) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");
             response.getWriter().write("{\"message\":\"Invalid or expired token\",\"id\":401}");
