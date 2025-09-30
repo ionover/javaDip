@@ -22,6 +22,12 @@ public class UserService {
         return usersEntity.map(UserDto::new);
     }
 
+    public Optional<UserDto> findByJwtToken(String jwtToken) {
+        Optional<UsersEntity> usersEntity = userRepository.findByJwtToken(jwtToken);
+        
+        return usersEntity.map(UserDto::new);
+    }
+
     public void save(UserDto userDto) {
         UsersEntity userEntity = new UsersEntity();
         userEntity.setId(userDto.getId());

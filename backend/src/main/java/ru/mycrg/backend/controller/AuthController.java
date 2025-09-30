@@ -50,7 +50,18 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public String logout(@RequestHeader String token) {
-        return "Hello World";
+    public ResponseEntity<Void> logout(@RequestHeader("auth-token") String authToken) {
+        if (!jwtService.isTokenValid(authToken)) {
+            throw new AuthException("Invalid token");
+        }
+
+        Optional<UserDto> userDto = userService.findByJwtToken(authToken);
+        if (userDto.isPresent()) {
+            UserDto user = userDto.get();
+            user.setJwtToken(null);
+            userService.save(user);
+        }
+
+        return ResponseEntity.ok().build();
     }
 }
