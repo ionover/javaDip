@@ -9,7 +9,7 @@ import ru.mycrg.backend.service.JwtService;
 
 import java.util.UUID;
 
-import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/file")
@@ -35,7 +35,7 @@ public class FileController {
 
         FilesDto filesDto = filesService.createFile(filename, file);
 
-        return ResponseEntity.status(CREATED).body(filesDto);
+        return ResponseEntity.status(OK).body(filesDto);
     }
 
     @PutMapping
