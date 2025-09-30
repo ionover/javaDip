@@ -1,8 +1,9 @@
-package ru.mycrg.backend;
+package ru.mycrg.backend.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
+import ru.mycrg.backend.entity.FilesEntity;
 
 @Setter
 @Getter

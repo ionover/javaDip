@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ru.mycrg.backend.FilesDto;
+import ru.mycrg.backend.dto.FilesDto;
 import ru.mycrg.backend.FilesException;
 
 import java.io.IOException;

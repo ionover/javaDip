@@ -1,19 +1,23 @@
 package ru.mycrg.backend.controller;
 
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
+import ru.mycrg.backend.dto.LoginDto;
 
 @RestController
 public class AuthController {
 
     @PostMapping("/login")
-    public String login(@RequestParam String username, @RequestParam String password) {
-        return login(username, password);
+    public String login(@RequestBody LoginDto loginDto) {
+        String token = "";
+
+        return token;
     }
 
     @PostMapping("/logout")
-    public String logout() {
+    public String logout(@RequestHeader String token) {
         return "Hello World";
     }
 }
