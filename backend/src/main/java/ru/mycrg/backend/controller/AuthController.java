@@ -55,6 +55,7 @@ public class AuthController {
         if (userDto.isPresent()) {
             UserDto user = userDto.get();
             user.setJwtToken(null);
+
             userService.save(user);
         }
 
