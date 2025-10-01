@@ -71,7 +71,7 @@ public class FilesService {
                             .toList();
     }
 
-    public FilesEntity getFileEntityByName(String filename) {
+    public FilesEntity getFileEntityByTitle(String filename) {
         return fileRepository.findByTitleAndNotDeleted(filename)
                              .orElseThrow(() -> new IllegalArgumentException("Файл не найден: " + filename));
     }

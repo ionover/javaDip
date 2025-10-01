@@ -32,19 +32,12 @@ public class FileController {
                                             @RequestParam(value = "filename") String filename) {
         log.debug("authToken: {}, filename: {} ", authToken, filename);
 
-        FilesEntity fileEntity = filesService.getFileEntityByName(filename);
+        FilesEntity fileEntity = filesService.getFileEntityByTitle(filename);
 
         Resource resource = filesService.getFileResource(fileEntity.getPath());
 
-        String hash = String.valueOf(fileEntity.getPath().hashCode());
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-        headers.add("Content-Disposition", "attachment; filename=\"" + filename + "\"");
-        headers.add("X-File-Hash", hash);
-
         return ResponseEntity.ok()
-                             .headers(headers)
+                             .headers(createGetFileHeaders(filename, fileEntity))
                              .body(resource);
     }
 
@@ -64,7 +57,7 @@ public class FileController {
                                           @RequestParam(value = "filename") String filename,
                                           @RequestBody UpdateFilenameDto updateFilenameDto) {
 
-        log.info("authToken: {}, filename: {}, newName: {}", authToken, filename, updateFilenameDto.getFilename());
+        log.debug("authToken: {}, filename: {}, newName: {}", authToken, filename, updateFilenameDto.getFilename());
 
         filesService.updateFileTitle(filename, updateFilenameDto.getFilename());
 
@@ -74,10 +67,19 @@ public class FileController {
     @DeleteMapping
     public ResponseEntity<Object> deleteFile(@RequestHeader("auth-token") String authToken,
                                              @RequestParam(value = "filename") String filename) {
-        log.info("authToken: {}, id: {}", authToken, filename);
+        log.debug("authToken: {}, id: {}", authToken, filename);
 
         filesService.deleteFile(filename);
 
         return ResponseEntity.noContent().build();
+    }
+
+    private static HttpHeaders createGetFileHeaders(String filename, FilesEntity fileEntity) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        headers.add("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+        headers.add("X-File-Hash", String.valueOf(fileEntity.getPath().hashCode()));
+
+        return headers;
     }
 }
