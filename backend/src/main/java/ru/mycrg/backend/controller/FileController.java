@@ -1,11 +1,16 @@
 package ru.mycrg.backend.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.backend.dto.FilesDto;
+import ru.mycrg.backend.entity.FilesEntity;
 import ru.mycrg.backend.service.FilesService;
-import ru.mycrg.backend.service.JwtService;
 
 import java.util.UUID;
 
@@ -15,18 +20,33 @@ import static org.springframework.http.HttpStatus.OK;
 @RequestMapping("/file")
 public class FileController {
 
-    public final FilesService filesService;
-    private final JwtService jwtService;
+    private static final Logger log = LoggerFactory.getLogger(FileController.class);
 
-    public FileController(FilesService filesService, JwtService jwtService) {
+    public final FilesService filesService;
+
+    public FileController(FilesService filesService) {
         this.filesService = filesService;
-        this.jwtService = jwtService;
     }
 
     @GetMapping
-    public String getFile(@RequestParam("id") UUID id) {
+    public ResponseEntity<Resource> getFile(@RequestHeader("auth-token") String authToken,
+                                            @RequestParam(value = "filename") String filename) {
+        log.debug("authToken: {}, filename: {} ", authToken, filename);
 
-        return "helloworld";
+        FilesEntity fileEntity = filesService.getFileEntityByName(filename);
+
+        Resource resource = filesService.getFileResource(fileEntity.getPath());
+
+        String hash = String.valueOf(fileEntity.getPath().hashCode());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        headers.add("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+        headers.add("X-File-Hash", hash);
+
+        return ResponseEntity.ok()
+                             .headers(headers)
+                             .body(resource);
     }
 
     @PostMapping

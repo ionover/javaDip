@@ -4,9 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ru.mycrg.backend.dto.FilesDto;
 import ru.mycrg.backend.exception.FilesException;
 
 import java.io.IOException;
@@ -14,7 +15,6 @@ import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
@@ -65,7 +65,18 @@ public class FilesStorageService {
         }
     }
 
-    public List<FilesDto> getAllWithLimit(Integer limit) {
-        return null;
+    public Resource loadFileAsResource(String filePath) {
+        try {
+            Path file = Paths.get(filePath).normalize();
+            Resource resource = new UrlResource(file.toUri());
+
+            if (resource.exists() && resource.isReadable()) {
+                return resource;
+            } else {
+                throw new FilesException("Файл не найден или недоступен для чтения: " + filePath);
+            }
+        } catch (Exception e) {
+            throw new FilesException("Неверный путь к файлу: " + filePath);
+        }
     }
 }

@@ -1,5 +1,6 @@
 package ru.mycrg.backend.service;
 
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -63,5 +64,14 @@ public class FilesService {
         return filesEntities.stream()
                             .map(FilesDto::new)
                             .toList();
+    }
+
+    public FilesEntity getFileEntityByName(String filename) {
+        return fileRepository.findByTitleAndNotDeleted(filename)
+                             .orElseThrow(() -> new IllegalArgumentException("File not found: " + filename));
+    }
+
+    public Resource getFileResource(String path) {
+        return filesStorageService.loadFileAsResource(path);
     }
 }
