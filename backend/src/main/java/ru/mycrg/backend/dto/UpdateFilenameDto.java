@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateFileNameDto {
+public class UpdateFilenameDto {
 
-    private String name;
+    private String filename;
 }

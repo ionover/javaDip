@@ -80,7 +80,7 @@ public class FilesService {
         return filesStorageService.loadFileAsResource(path);
     }
 
-    public void updateFileName(String currentFileName, String newFileName) {
+    public void updateFileTitle(String currentFileName, String newFileName) {
         FilesEntity entity = fileRepository.findByTitleAndNotDeleted(currentFileName)
                                            .orElseThrow(() -> new IllegalArgumentException(
                                                    "Файл не найден: " + currentFileName));

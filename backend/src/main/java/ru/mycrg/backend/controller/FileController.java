@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.backend.dto.FilesDto;
-import ru.mycrg.backend.dto.UpdateFileNameDto;
+import ru.mycrg.backend.dto.UpdateFilenameDto;
 import ru.mycrg.backend.entity.FilesEntity;
 import ru.mycrg.backend.service.FilesService;
 
@@ -62,12 +62,11 @@ public class FileController {
     @PutMapping
     public ResponseEntity<Object> putFile(@RequestHeader("auth-token") String authToken,
                                           @RequestParam(value = "filename") String filename,
-                                          @RequestBody UpdateFileNameDto updateFileNameDto) {
+                                          @RequestBody UpdateFilenameDto updateFilenameDto) {
 
-        log.debug("Просто лог");
-        //log.debug("authToken: {}, filename: {}, newName: {}", authToken, filename, updateFileNameDto.getName());
+        log.info("authToken: {}, filename: {}, newName: {}", authToken, filename, updateFilenameDto.getFilename());
 
-        //filesService.updateFileName(filename, updateFileNameDto.getName());
+        filesService.updateFileTitle(filename, updateFilenameDto.getFilename());
 
         return ResponseEntity.status(OK).build();
     }
