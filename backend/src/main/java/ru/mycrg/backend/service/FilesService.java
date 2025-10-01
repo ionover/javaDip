@@ -74,4 +74,12 @@ public class FilesService {
     public Resource getFileResource(String path) {
         return filesStorageService.loadFileAsResource(path);
     }
+
+    public void updateFileName(String currentFileName, String newFileName) {
+        FilesEntity entity = fileRepository.findByTitleAndNotDeleted(currentFileName)
+                                           .orElseThrow(() -> new IllegalArgumentException("File not found: " + currentFileName));
+        
+        entity.setTitle(newFileName);
+        fileRepository.save(entity);
+    }
 }

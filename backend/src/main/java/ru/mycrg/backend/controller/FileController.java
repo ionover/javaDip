@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.backend.dto.FilesDto;
+import ru.mycrg.backend.dto.UpdateFileNameDto;
 import ru.mycrg.backend.entity.FilesEntity;
 import ru.mycrg.backend.service.FilesService;
 
@@ -50,8 +51,10 @@ public class FileController {
     }
 
     @PostMapping
-    public ResponseEntity<FilesDto> postFile(@RequestParam(value = "filename", required = false) String filename,
+    public ResponseEntity<FilesDto> postFile(@RequestHeader("auth-token") String authToken,
+                                             @RequestParam(value = "filename", required = false) String filename,
                                              @RequestParam("file") MultipartFile file) {
+        log.debug("authToken: {}", authToken);
 
         FilesDto filesDto = filesService.createFile(filename, file);
 
@@ -59,12 +62,20 @@ public class FileController {
     }
 
     @PutMapping
-    public String putFile() {
-        return "Hello World";
+    public ResponseEntity<Object> putFile(@RequestHeader("auth-token") String authToken,
+                                          @RequestParam(value = "filename") String filename,
+                                          @RequestBody UpdateFileNameDto updateFileNameDto) {
+        log.debug("authToken: {}, filename: {}, newName: {}", authToken, filename, updateFileNameDto.getName());
+
+        filesService.updateFileName(filename, updateFileNameDto.getName());
+
+        return ResponseEntity.status(OK).build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteFile(@PathVariable("id") UUID id) {
+    public ResponseEntity<Object> deleteFile(@RequestHeader("auth-token") String authToken,
+                                             @PathVariable("id") UUID id) {
+        log.debug("authToken: {}, id: {}", authToken, id);
 
         filesService.deleteFile(id);
 
