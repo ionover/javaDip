@@ -1,5 +1,7 @@
 package ru.mycrg.backend.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +18,8 @@ import java.util.UUID;
 @Service
 public class FilesService {
 
+    private static final Logger log = LoggerFactory.getLogger(FilesService.class);
+
     private final FilesStorageService filesStorageService;
     private final FileRepository fileRepository;
 
@@ -26,7 +30,7 @@ public class FilesService {
 
     public FilesDto createFile(String fileName, MultipartFile file) {
         if (file.isEmpty()) {
-            throw new IllegalArgumentException("File is empty");
+            throw new IllegalArgumentException("Файл пустой!");
         }
 
         String path = filesStorageService.copyToStorage(file, generateFileName(file));
@@ -50,7 +54,8 @@ public class FilesService {
     public void deleteFile(String filename) {
         FilesEntity entity = fileRepository.findByTitleAndNotDeleted(filename)
                                            .orElseThrow(
-                                                   () -> new IllegalArgumentException("Нет файла с именем: " + filename));
+                                                   () -> new IllegalArgumentException(
+                                                           "Нет файла с именем: " + filename));
 
         entity.setIsDeleted(true);
         fileRepository.save(entity);
@@ -68,7 +73,7 @@ public class FilesService {
 
     public FilesEntity getFileEntityByName(String filename) {
         return fileRepository.findByTitleAndNotDeleted(filename)
-                             .orElseThrow(() -> new IllegalArgumentException("File not found: " + filename));
+                             .orElseThrow(() -> new IllegalArgumentException("Файл не найден: " + filename));
     }
 
     public Resource getFileResource(String path) {
@@ -78,9 +83,10 @@ public class FilesService {
     public void updateFileName(String currentFileName, String newFileName) {
         FilesEntity entity = fileRepository.findByTitleAndNotDeleted(currentFileName)
                                            .orElseThrow(() -> new IllegalArgumentException(
-                                                   "File not found: " + currentFileName));
+                                                   "Файл не найден: " + currentFileName));
 
         entity.setTitle(newFileName);
+        log.debug("Обновляем имя объекта {}", entity);
         fileRepository.save(entity);
     }
 }

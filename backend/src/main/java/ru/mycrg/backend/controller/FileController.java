@@ -63,9 +63,11 @@ public class FileController {
     public ResponseEntity<Object> putFile(@RequestHeader("auth-token") String authToken,
                                           @RequestParam(value = "filename") String filename,
                                           @RequestBody UpdateFileNameDto updateFileNameDto) {
-        log.debug("authToken: {}, filename: {}, newName: {}", authToken, filename, updateFileNameDto.getName());
 
-        filesService.updateFileName(filename, updateFileNameDto.getName());
+        log.debug("Просто лог");
+        //log.debug("authToken: {}, filename: {}, newName: {}", authToken, filename, updateFileNameDto.getName());
+
+        //filesService.updateFileName(filename, updateFileNameDto.getName());
 
         return ResponseEntity.status(OK).build();
     }
@@ -73,7 +75,7 @@ public class FileController {
     @DeleteMapping
     public ResponseEntity<Object> deleteFile(@RequestHeader("auth-token") String authToken,
                                              @RequestParam(value = "filename") String filename) {
-        log.debug("authToken: {}, id: {}", authToken, filename);
+        log.info("authToken: {}, id: {}", authToken, filename);
 
         filesService.deleteFile(filename);
 
