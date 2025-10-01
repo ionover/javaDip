@@ -23,7 +23,7 @@ public class FilesListController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<FilesDto> getFiles(@RequestHeader("auth-token") String authToken,
+    public ResponseEntity<List<FilesDto>> getFiles(@RequestHeader("auth-token") String authToken,
                                              @RequestParam(value = "limit", required = false) Integer limit) {
 
         log.debug("auth-token: {}", authToken);
@@ -31,9 +31,6 @@ public class FilesListController {
         List<FilesDto> filesDtoList = filesService.getAllWithLimit(limit);
         log.info("Retrieved {} files from service", filesDtoList.size());
 
-        FilesDto response = filesDtoList.isEmpty() ? new FilesDto() : filesDtoList.get(0);
-        log.info("Returning response: filename={}, size={}", response.getFilename(), response.getSize());
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(filesDtoList);
     }
 }
