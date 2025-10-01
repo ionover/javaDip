@@ -47,10 +47,10 @@ public class FilesService {
         }
     }
 
-    public void deleteFile(UUID id) {
-        FilesEntity entity = fileRepository.findById(id)
+    public void deleteFile(String filename) {
+        FilesEntity entity = fileRepository.findByTitleAndNotDeleted(filename)
                                            .orElseThrow(
-                                                   () -> new IllegalArgumentException("File not found with id: " + id));
+                                                   () -> new IllegalArgumentException("Нет файла с именем: " + filename));
 
         entity.setIsDeleted(true);
         fileRepository.save(entity);
@@ -77,8 +77,9 @@ public class FilesService {
 
     public void updateFileName(String currentFileName, String newFileName) {
         FilesEntity entity = fileRepository.findByTitleAndNotDeleted(currentFileName)
-                                           .orElseThrow(() -> new IllegalArgumentException("File not found: " + currentFileName));
-        
+                                           .orElseThrow(() -> new IllegalArgumentException(
+                                                   "File not found: " + currentFileName));
+
         entity.setTitle(newFileName);
         fileRepository.save(entity);
     }

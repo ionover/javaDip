@@ -24,12 +24,12 @@ public class FilesListController {
 
     @GetMapping("/list")
     public ResponseEntity<List<FilesDto>> getFiles(@RequestHeader("auth-token") String authToken,
-                                             @RequestParam(value = "limit", required = false) Integer limit) {
+                                                   @RequestParam(value = "limit", required = false) Integer limit) {
 
         log.debug("auth-token: {}", authToken);
 
         List<FilesDto> filesDtoList = filesService.getAllWithLimit(limit);
-        log.info("Retrieved {} files from service", filesDtoList.size());
+        log.info("Количество найденных файлов: {}", filesDtoList.size());
 
         return ResponseEntity.ok(filesDtoList);
     }

@@ -13,8 +13,6 @@ import ru.mycrg.backend.dto.UpdateFileNameDto;
 import ru.mycrg.backend.entity.FilesEntity;
 import ru.mycrg.backend.service.FilesService;
 
-import java.util.UUID;
-
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
@@ -72,12 +70,12 @@ public class FileController {
         return ResponseEntity.status(OK).build();
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping
     public ResponseEntity<Object> deleteFile(@RequestHeader("auth-token") String authToken,
-                                             @PathVariable("id") UUID id) {
-        log.debug("authToken: {}, id: {}", authToken, id);
+                                             @RequestParam(value = "filename") String filename) {
+        log.debug("authToken: {}, id: {}", authToken, filename);
 
-        filesService.deleteFile(id);
+        filesService.deleteFile(filename);
 
         return ResponseEntity.noContent().build();
     }
