@@ -6,11 +6,13 @@ import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ru.mycrg.backend.dto.UserDto;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class JwtService {
@@ -21,8 +23,10 @@ public class JwtService {
     private static final long JWT_EXPIRATION = 86400000;
 
     private final SecretKey key;
+    private final UserService userService;
 
-    public JwtService() {
+    public JwtService(UserService userService) {
+        this.userService = userService;
         this.key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     }
 
@@ -42,7 +46,6 @@ public class JwtService {
 
     public boolean isTokenValid(String token) {
         token = token.trim();
-
         // Убираем префикс "Bearer " если он есть
         if (token.startsWith("Bearer ")) {
             token = token.replace("Bearer ", "");
@@ -55,10 +58,19 @@ public class JwtService {
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token);
+            log.info("Токен предоставленный пользователем сформирован нашим кодом.");
 
-            log.info("Токен валиден");
+            Optional<UserDto> user = userService.findByJwtToken(token);
 
-            return true;
+            if (user.isPresent()) {
+                log.info("Токен найден в базе данных для пользователя: {}", user.get().getLogin());
+
+                return true;
+            } else {
+                log.warn("Токен не найден в базе данных!!!");
+
+                return false;
+            }
         } catch (Exception e) {
             log.error("Ошибка валидации токена: {}", e.getMessage(), e);
 
