@@ -1,5 +1,7 @@
 package ru.mycrg.backend.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -7,8 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.mycrg.backend.dto.FilesDto;
 import ru.mycrg.backend.service.FilesService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -26,13 +26,11 @@ public class FilesListController {
     public ResponseEntity<FilesDto> getFiles(@RequestHeader("auth-token") String authToken,
                                              @RequestParam(value = "limit", required = false) Integer limit) {
 
-        log.info("FilesListController: GET /list called with limit={}", limit);
-        
+        log.debug("auth-token: {}", authToken);
+
         List<FilesDto> filesDtoList = filesService.getAllWithLimit(limit);
         log.info("Retrieved {} files from service", filesDtoList.size());
 
-        // Согласно спецификации возвращаем один объект, а не массив
-        // Берем первый файл из списка или создаем пустой объект если список пуст
         FilesDto response = filesDtoList.isEmpty() ? new FilesDto() : filesDtoList.get(0);
         log.info("Returning response: filename={}, size={}", response.getFilename(), response.getSize());
 

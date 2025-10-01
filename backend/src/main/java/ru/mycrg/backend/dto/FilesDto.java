@@ -1,6 +1,5 @@
 package ru.mycrg.backend.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,10 +12,9 @@ import ru.mycrg.backend.entity.FilesEntity;
 @AllArgsConstructor
 public class FilesDto {
 
-    @JsonProperty("filename")
-    private String filename;
-
     private Integer size;
+
+    private String filename;
 
     public FilesDto(FilesEntity entity) {
         this.filename = entity.getTitle();
