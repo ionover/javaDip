@@ -4,11 +4,18 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import ru.mycrg.backend.dto.FilesDto;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.http.HttpMethod.GET;
@@ -27,10 +34,10 @@ public class FilesIntegrationTest {
         //Then  сервер отвечает со статусом: 200
         //And   в ответе находится пустой массив
         String authToken = extractTokenFromResponse(loginAsAdmin());
-        ResponseEntity<String> response = getFilesList(authToken);
+        ResponseEntity<List<FilesDto>> response = getFilesList(authToken);
 
         assertTrue(response.getStatusCode().is2xxSuccessful());
-        assertTrue(response.getBody() != null && response.getBody().startsWith("[]"));
+        assertTrue(response.getBody() != null && response.getBody().size() == 0);
     }
 
     @Test
@@ -41,17 +48,15 @@ public class FilesIntegrationTest {
         //Then  сервер отвечает со статусом: 200
         //And   в ответе есть "size" и "filename"
         String authToken = extractTokenFromResponse(loginAsAdmin());
+        String filename = "smallTestFileOne.txt";
 
-        addFileOnCloud(authToken);
-
-        ResponseEntity<String> response = getFilesList(authToken);
+        ResponseEntity<FilesDto> response = addFileOnCloud(authToken, filename);
 
         assertTrue(response.getStatusCode().is2xxSuccessful());
-        assertTrue(response.getBody() != null && response.getBody().contains("size"));
-        assertTrue(response.getBody() != null && response.getBody().contains("filename"));
+        assertTrue(response.getBody() != null && response.getBody().getFilename().equals(filename));
     }
 
-    private ResponseEntity<String> getFilesList(String authToken) {
+    private ResponseEntity<List<FilesDto>> getFilesList(String authToken) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("auth-token", "Bearer " + authToken);
@@ -63,7 +68,7 @@ public class FilesIntegrationTest {
                 "http://10.10.10.61:8084/list?limit=3",
                 GET,
                 entity,
-                String.class
+                List<FilesDto>.class
         );
     }
 
@@ -79,21 +84,24 @@ public class FilesIntegrationTest {
         return jsonNode.get(AUTH_TOKEN_HEADER).asText();
     }
 
-    private void addFileOnCloud(String authToken) {
+    private ResponseEntity<FilesDto> addFileOnCloud(String authToken, String filename) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.set("auth-token", "Bearer " + authToken);
+        headers.set(AUTH_TOKEN_HEADER, "Bearer " + authToken);
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-        //В этом тесте используем файл smallTestFileOne.txt
+        ClassPathResource fileResource = new ClassPathResource(filename);
 
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("file", fileResource);
 
-        // Выполняем запрос
-        restTemplate.exchange(
-                "http://10.10.10.61:8084/file",
+        HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<>(body, headers);
+
+        return restTemplate.exchange(
+                "http://10.10.10.61:8084/file?filename=" + filename,
                 POST,
                 entity,
-                String.class
+                FilesDto.class
         );
     }
 }
