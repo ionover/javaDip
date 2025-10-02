@@ -1,8 +1,5 @@
 package ru.mycrg.backend.integration;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.ClassPathResource;
@@ -21,11 +18,12 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.HttpMethod.*;
-import static ru.mycrg.backend.integration.AuthIntegrationTest.AUTH_TOKEN_HEADER;
-import static ru.mycrg.backend.integration.AuthIntegrationTest.loginAsAdmin;
+import static ru.mycrg.backend.integration.AuthIntegrationTest.*;
 
 @Testcontainers
 public class FilesIntegrationTest {
+
+    private final RestTemplate restTemplate = new RestTemplate();
 
     @Test
     void emptyListWhenNoFilesAdd() {
@@ -139,7 +137,7 @@ public class FilesIntegrationTest {
         assertEquals(filenames.length, response.getBody().size());
     }
 
-    private ResponseEntity<List<FilesDto>> getFilesList(String authToken) {
+    public static ResponseEntity<List<FilesDto>> getFilesList(String authToken) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set(AUTH_TOKEN_HEADER, "Bearer " + authToken);
@@ -156,20 +154,7 @@ public class FilesIntegrationTest {
         );
     }
 
-    private String extractTokenFromResponse(ResponseEntity<String> stringResponseEntity) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonNode;
-        try {
-            jsonNode = objectMapper.readTree(stringResponseEntity.getBody());
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        return jsonNode.get(AUTH_TOKEN_HEADER).asText();
-    }
-
     private ResponseEntity<FilesDto> addFileOnCloud(String authToken, String filename) {
-        RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set(AUTH_TOKEN_HEADER, "Bearer " + authToken);
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -190,7 +175,6 @@ public class FilesIntegrationTest {
     }
 
     private void putFileName(String authToken, String filename, String newFilename) {
-        RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set(AUTH_TOKEN_HEADER, "Bearer " + authToken);
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -208,7 +192,6 @@ public class FilesIntegrationTest {
     }
 
     private void deleteFile(String authToken, String filename) {
-        RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set(AUTH_TOKEN_HEADER, "Bearer " + authToken);
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -228,6 +211,7 @@ public class FilesIntegrationTest {
 
         if (response.getBody() == null || response.getBody().isEmpty()) {
             System.out.println("Нет файлов чтобы удалять");
+
             return;
         }
 

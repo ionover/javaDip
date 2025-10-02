@@ -24,7 +24,7 @@ public class UserService {
 
     public Optional<UserDto> findByJwtToken(String jwtToken) {
         Optional<UsersEntity> usersEntity = userRepository.findByJwtToken(jwtToken);
-        
+
         return usersEntity.map(UserDto::new);
     }
 
