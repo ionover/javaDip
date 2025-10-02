@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -14,12 +15,13 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.mycrg.backend.dto.FilesDto;
+import ru.mycrg.backend.dto.UpdateFilenameDto;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.*;
 import static ru.mycrg.backend.integration.AuthIntegrationTest.AUTH_TOKEN_HEADER;
 import static ru.mycrg.backend.integration.AuthIntegrationTest.loginAsAdmin;
 
@@ -37,7 +39,8 @@ public class FilesIntegrationTest {
         ResponseEntity<List<FilesDto>> response = getFilesList(authToken);
 
         assertTrue(response.getStatusCode().is2xxSuccessful());
-        assertTrue(response.getBody() != null && response.getBody().size() == 0);
+        assertNotNull(response.getBody());
+        assertTrue(response.getBody().isEmpty());
     }
 
     @Test
@@ -46,7 +49,7 @@ public class FilesIntegrationTest {
         //Given я авторизован как "admin"
         //When  я делаю запрос на добавления файла
         //Then  сервер отвечает со статусом: 200
-        //And   в ответе есть "size" и "filename"
+        //And   имя файла корректно
         String authToken = extractTokenFromResponse(loginAsAdmin());
         String filename = "smallTestFileOne.txt";
 
@@ -56,10 +59,35 @@ public class FilesIntegrationTest {
         assertTrue(response.getBody() != null && response.getBody().getFilename().equals(filename));
     }
 
+    @Test
+    public void successfullyPutFile() {
+        //Scenario: Обновление файла, с правильным токеном проходит успешно
+        //Given я авторизован как "admin"
+        //Given на сервер загружен файл с именем "smallTestFileTwo.txt"
+        //When  я меняю имя файла на "helloWorld.txt"
+        //Then  сервер отвечает со статусом: 200
+        //And   в ответе имя файла соответствует ожидаемому
+        //*     вес файла НЕ изменился
+        String authToken = extractTokenFromResponse(loginAsAdmin());
+        String filename = "smallTestFileTwo.txt";
+        ResponseEntity<FilesDto> res = addFileOnCloud(authToken, filename);
+        FilesDto currentfile = res.getBody();
+        String newFilename = "helloWorld.txt";
+
+        putFileName(authToken, filename, newFilename);
+
+        ResponseEntity<List<FilesDto>> response = getFilesList(authToken);
+
+        assertTrue(response.getStatusCode().is2xxSuccessful());
+        assertNotNull(response.getBody());
+        assertTrue(response.getBody().get(0).getFilename().equals(newFilename));
+        assertTrue(response.getBody().get(0).getFilename().equals(currentfile.getSize()));
+    }
+
     private ResponseEntity<List<FilesDto>> getFilesList(String authToken) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.set("auth-token", "Bearer " + authToken);
+        headers.set(AUTH_TOKEN_HEADER, "Bearer " + authToken);
 
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
@@ -68,7 +96,8 @@ public class FilesIntegrationTest {
                 "http://10.10.10.61:8084/list?limit=3",
                 GET,
                 entity,
-                List<FilesDto>.class
+                new ParameterizedTypeReference<List<FilesDto>>() {
+                }
         );
     }
 
@@ -102,6 +131,24 @@ public class FilesIntegrationTest {
                 POST,
                 entity,
                 FilesDto.class
+        );
+    }
+
+    private void putFileName(String authToken, String filename, String newFilename) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(AUTH_TOKEN_HEADER, "Bearer " + authToken);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        UpdateFilenameDto body = new UpdateFilenameDto(newFilename);
+
+        HttpEntity<UpdateFilenameDto> entity = new HttpEntity<>(body, headers);
+
+        restTemplate.exchange(
+                "http://10.10.10.61:8084/file?filename=" + filename,
+                PUT,
+                entity,
+                Void.class
         );
     }
 }
