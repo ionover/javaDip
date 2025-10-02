@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import ru.mycrg.backend.dto.LoginDto;
 import ru.mycrg.backend.dto.UserDto;
+import ru.mycrg.backend.dto.response.LoginSuccessResponse;
+import ru.mycrg.backend.exception.UserNotFoundException;
 import ru.mycrg.backend.service.JwtService;
 import ru.mycrg.backend.service.UserService;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -31,7 +31,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<Object> login(@RequestBody LoginDto loginDto) {
         log.info("Пользователь: {} попытка авторизации", loginDto.getLogin());
 
         Optional<UserDto> userDto = userService.findByLoginAndPassword(
@@ -45,21 +45,14 @@ public class AuthController {
 
             user.setJwtToken(token);
             userService.save(user);
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("auth-token", token);
-
             log.info("Пользователь: {} успешная авторизации", loginDto.getLogin());
-            return ResponseEntity.ok(response);
+
+            return ResponseEntity.ok(new LoginSuccessResponse(token));
         } else {
             log.info("Пользователь: {} Неправильный логин либо пароль!!!", loginDto.getLogin());
 
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("message", "Bad credentials");
-            errorResponse.put("id", 0);
-
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                 .body(errorResponse);
+                                 .body(new UserNotFoundException("Bad credentials", 0));
         }
     }
 

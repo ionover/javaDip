@@ -1,12 +1,18 @@
 package ru.mycrg.backend.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@JsonIgnoreProperties({"stackTrace", "cause", "suppressed", "localizedMessage"})
 public class UserNotFoundException extends RuntimeException {
 
-    public UserNotFoundException(String message) {
-        super(message);
-    }
+    private String message;
+    private int id;
 }

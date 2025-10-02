@@ -8,6 +8,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.mycrg.backend.dto.FilesDto;
@@ -15,6 +16,7 @@ import ru.mycrg.backend.dto.LoginDto;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.http.HttpMethod.POST;
 import static ru.mycrg.backend.integration.FilesIntegrationTest.getFilesList;
@@ -39,6 +41,19 @@ public class AuthIntegrationTest {
     }
 
     @Test
+    void authWithUnCorrectCredentials() {
+        //Scenario: Авторизация с НЕ валидными учётными данными вызовет 400
+        //When  я авторизуюсь как "Несуществующий пользователь"
+        //Then  сервер отвечает со статусом: 400
+        //And   в ответе содержится "Bad credentials"
+
+        ResponseEntity<String> response = loginAsWithErrorHandling("TeaPot");
+
+        assertEquals(400, response.getStatusCode().value());
+        assertTrue(response.getBody() != null && response.getBody().contains("Bad credentials"));
+    }
+
+    @Test
     void successfullyLogOut() {
         //Scenario: Успешный выход с валидным токеном
         //Given я авторизован как "admin"
@@ -54,10 +69,14 @@ public class AuthIntegrationTest {
     }
 
     public static ResponseEntity<String> loginAsAdmin() {
+        return loginAs("admin");
+    }
+
+    public static ResponseEntity<String> loginAs(String user) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        LoginDto requestBody = new LoginDto("admin", "admin");
+        LoginDto requestBody = new LoginDto(user, user);
 
         HttpEntity<LoginDto> entity = new HttpEntity<>(requestBody, headers);
 
@@ -80,6 +99,16 @@ public class AuthIntegrationTest {
                 entity,
                 Void.class
         );
+    }
+
+    public static ResponseEntity<String> loginAsWithErrorHandling(String user) {
+        try {
+            return loginAs(user);
+        } catch (HttpClientErrorException ex) {
+            return ResponseEntity.status(ex.getStatusCode())
+                                 .headers(ex.getResponseHeaders())
+                                 .body(ex.getResponseBodyAsString());
+        }
     }
 
     public static String extractTokenFromResponse(ResponseEntity<String> stringResponseEntity) {
