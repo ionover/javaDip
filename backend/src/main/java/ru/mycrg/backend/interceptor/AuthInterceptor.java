@@ -41,12 +41,13 @@ public class AuthInterceptor implements HandlerInterceptor {
         if (token == null || token.isEmpty()) {
             log.warn("Missing auth-token header");
 
-            throw new AuthException("Missing auth-token header");
+            throw new AuthException("Unauthorized error", 0);
         }
 
-        boolean isValid = jwtService.isTokenValid(token);
-        log.info("Token validation result: {}", isValid);
+        if (!jwtService.isTokenValid(token)) {
+            throw new AuthException("Unauthorized error", 0);
+        }
 
-        return isValid;
+        return true;
     }
 }
