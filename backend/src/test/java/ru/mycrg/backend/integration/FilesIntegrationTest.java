@@ -19,8 +19,7 @@ import ru.mycrg.backend.dto.UpdateFilenameDto;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.HttpMethod.*;
 import static ru.mycrg.backend.integration.AuthIntegrationTest.AUTH_TOKEN_HEADER;
 import static ru.mycrg.backend.integration.AuthIntegrationTest.loginAsAdmin;
@@ -71,7 +70,7 @@ public class FilesIntegrationTest {
         String authToken = extractTokenFromResponse(loginAsAdmin());
         String filename = "smallTestFileTwo.txt";
         ResponseEntity<FilesDto> res = addFileOnCloud(authToken, filename);
-        FilesDto currentfile = res.getBody();
+        FilesDto currentFile = res.getBody();
         String newFilename = "helloWorld.txt";
 
         putFileName(authToken, filename, newFilename);
@@ -80,8 +79,11 @@ public class FilesIntegrationTest {
 
         assertTrue(response.getStatusCode().is2xxSuccessful());
         assertNotNull(response.getBody());
-        assertTrue(response.getBody().get(0).getFilename().equals(newFilename));
-        assertTrue(response.getBody().get(0).getFilename().equals(currentfile.getSize()));
+
+        assertEquals(newFilename, response.getBody().get(0).getFilename());
+        if (currentFile != null) {
+            assertEquals(response.getBody().get(0).getSize(), currentFile.getSize());
+        }
     }
 
     private ResponseEntity<List<FilesDto>> getFilesList(String authToken) {
