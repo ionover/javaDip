@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.mycrg.backend.dto.FilesDto;
+import ru.mycrg.backend.exception.InvalidInputDataException;
 import ru.mycrg.backend.service.FilesService;
 
 import java.util.List;
@@ -27,6 +28,10 @@ public class FilesListController {
                                                    @RequestParam(value = "limit", required = false) Integer limit) {
 
         log.debug("auth-token: {}", authToken);
+
+        if (limit != null && limit < 0) {
+            throw new InvalidInputDataException("Error input data", 0);
+        }
 
         List<FilesDto> filesDtoList = filesService.getAllWithLimit(limit);
         log.info("Количество найденных файлов: {}", filesDtoList.size());

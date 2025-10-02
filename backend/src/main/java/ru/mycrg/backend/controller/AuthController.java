@@ -61,9 +61,13 @@ public class AuthController {
         Optional<UserDto> userDto = userService.findByJwtToken(authToken);
         if (userDto.isPresent()) {
             UserDto user = userDto.get();
-            user.setJwtToken(null);
 
+            log.info("Пользователь: {} попытка выйти.", user.getLogin());
+
+            user.setJwtToken(null);
             userService.save(user);
+        } else {
+            log.info("Была попытка выйти со старым токеном: {}", authToken);
         }
 
         return ResponseEntity.ok().build();
