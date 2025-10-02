@@ -25,7 +25,7 @@ public class AuthIntegrationTest {
         assertTrue(response.getBody() != null && response.getBody().contains(AUTH_TOKEN_HEADER));
     }
 
-    public ResponseEntity<String> loginAsAdmin() {
+    public static ResponseEntity<String> loginAsAdmin() {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
