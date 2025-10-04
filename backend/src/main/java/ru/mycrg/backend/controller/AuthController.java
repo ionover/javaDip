@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
-import ru.mycrg.backend.dto.LoginDto;
+import ru.mycrg.backend.dto.request.LoginDto;
 import ru.mycrg.backend.dto.UserDto;
 import ru.mycrg.backend.dto.response.LoginSuccessResponse;
 import ru.mycrg.backend.exception.UserNotFoundException;

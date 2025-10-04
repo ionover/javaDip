@@ -1,10 +1,12 @@
 package ru.mycrg.backend.unit;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.env.Environment;
 import ru.mycrg.backend.dto.UserDto;
 import ru.mycrg.backend.entity.UsersEntity;
 import ru.mycrg.backend.repository.UserRepository;
@@ -21,13 +23,25 @@ import static org.mockito.Mockito.*;
 class JwtServiceTests {
 
     @Mock
+    private Environment environment;
+
+    @Mock
     private UserRepository userRepository;
 
     @InjectMocks
+    private UserService userServiceForTest;
+
     private JwtService jwtService;
 
-    @InjectMocks
-    private UserService userServiceForTest;
+    @BeforeEach
+    void setUp() {
+        when(environment.getRequiredProperty("back-options.jwtSecretKey"))
+                .thenReturn("test-secret-key-for-jwt-that-should-be-at-least-32-characters-long");
+        when(environment.getRequiredProperty("back-options.jwtExpiration"))
+                .thenReturn("3600000");
+
+        jwtService = new JwtService(environment, userServiceForTest);
+    }
 
     @Test
     void testGenerateToken_ShouldReturnNonNullToken() {

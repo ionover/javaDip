@@ -12,7 +12,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import ru.mycrg.backend.dto.UpdateFilenameDto;
+import ru.mycrg.backend.dto.request.UpdateFilenameDto;
 import ru.mycrg.backend.dto.response.FilesDto;
 
 import java.util.List;

@@ -1,6 +1,7 @@
 package ru.mycrg.backend.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -12,8 +13,11 @@ import ru.mycrg.backend.interceptor.AuthInterceptor;
 class WebConfig implements WebMvcConfigurer {
 
     private final AuthInterceptor authInterceptor;
+    private final String allowedOrigin;
 
-    WebConfig(AuthInterceptor authInterceptor) {
+    WebConfig(Environment environment, AuthInterceptor authInterceptor) {
+        allowedOrigin = environment.getRequiredProperty("back-options.allowedOrigin");
+
         this.authInterceptor = authInterceptor;
     }
 
@@ -21,7 +25,7 @@ class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowCredentials(true)
-                .allowedOrigins("http://10.10.10.61")
+                .allowedOrigins(allowedOrigin)
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .exposedHeaders("*");

@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.backend.dto.response.FilesDto;
-import ru.mycrg.backend.dto.UpdateFilenameDto;
+import ru.mycrg.backend.dto.request.UpdateFilenameDto;
 import ru.mycrg.backend.entity.FilesEntity;
 import ru.mycrg.backend.service.FilesService;
 

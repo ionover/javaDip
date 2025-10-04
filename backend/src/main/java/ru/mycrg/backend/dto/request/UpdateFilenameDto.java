@@ -1,4 +1,4 @@
-package ru.mycrg.backend.dto;
+package ru.mycrg.backend.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

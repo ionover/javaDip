@@ -7,8 +7,18 @@ services:
     build: backend
     container_name: javadip-backend
     environment:
+      SPRING_DATASOURCE_URL: ${DB_URL}
+      SPRING_DATASOURCE_USER: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
+
+      SPRING_FLYWAY_URL: ${DB_URL}
       SPRING_FLYWAY_USER: ${DB_USER}
       SPRING_FLYWAY_PASSWORD: ${DB_PASS}
+
+      BACK-OPTIONS_FILEPATH: /opt/files_storage
+      BACK-OPTIONS_ALLOWEDORIGIN: http://10.10.10.61
+      BACK-OPTIONS_JWTSECRETKEY: mySecretKeyForJWTTokenGenerationAndValidation123456789
+      BACK-OPTIONS_JWTEXPIRATION: 86400000
     ports:
       - "8084:8084"
     depends_on:
@@ -28,7 +38,7 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: backend_db
+      POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASS}
       PGUSER: ${DB_USER}

@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class FileUtils {
-    
+
     public static String extractExtension(String filename) {
         if (filename == null || filename.isEmpty()) {
             return null;

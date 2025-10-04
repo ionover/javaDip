@@ -8,7 +8,7 @@ import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import ru.mycrg.backend.dto.LoginDto;
+import ru.mycrg.backend.dto.request.LoginDto;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.HttpMethod.POST;

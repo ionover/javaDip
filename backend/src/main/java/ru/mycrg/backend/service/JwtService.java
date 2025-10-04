@@ -5,6 +5,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import ru.mycrg.backend.dto.UserDto;
 
@@ -19,15 +21,18 @@ public class JwtService {
 
     private static final Logger log = LoggerFactory.getLogger(JwtService.class);
 
-    private static final String SECRET_KEY = "mySecretKeyForJWTTokenGenerationAndValidation123456789";
-    private static final long JWT_EXPIRATION = 86400000;
+    private final Long JWT_EXPIRATION;
 
     private final SecretKey key;
     private final UserService userService;
 
-    public JwtService(UserService userService) {
+    @Autowired
+    public JwtService(Environment environment, UserService userService) {
+        String secretKey = environment.getRequiredProperty("back-options.jwtSecretKey");
+        JWT_EXPIRATION = Long.valueOf(environment.getRequiredProperty("back-options.jwtExpiration"));
+
         this.userService = userService;
-        this.key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+        this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
     public String generateToken(String login, String userId) {
