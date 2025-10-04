@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.backend.dto.response.FilesDto;
 import ru.mycrg.backend.entity.FilesEntity;
+import ru.mycrg.backend.exception.FilesException;
+import ru.mycrg.backend.exception.InvalidInputDataException;
 import ru.mycrg.backend.repository.FileRepository;
 import ru.mycrg.backend.util.FileUtils;
 
@@ -30,7 +32,7 @@ public class FilesService {
 
     public FilesDto createFile(String fileName, MultipartFile file) {
         if (file.isEmpty()) {
-            throw new IllegalArgumentException("Файл пустой!");
+            throw new InvalidInputDataException("Файл пустой!");
         }
 
         String path = filesStorageService.copyToStorage(file, generateFileName(file));
@@ -54,11 +56,17 @@ public class FilesService {
     public void deleteFile(String filename) {
         FilesEntity entity = fileRepository.findByTitleAndNotDeleted(filename)
                                            .orElseThrow(
-                                                   () -> new IllegalArgumentException(
+                                                   () -> new InvalidInputDataException(
                                                            "Нет файла с именем: " + filename));
 
         entity.setIsDeleted(true);
-        fileRepository.save(entity);
+        try {
+            fileRepository.save(entity);
+        } catch (Exception e) {
+            log.info("Не удалось записать в базу признак удалённого файла: {}", e.getMessage());
+
+            throw new FilesException("Не удалось пометить файл как удалённый в базе. Причина: " + e.getMessage());
+        }
     }
 
     public List<FilesDto> getAllWithLimit(Integer limit) {
@@ -73,7 +81,7 @@ public class FilesService {
 
     public FilesEntity getFileEntityByTitle(String filename) {
         return fileRepository.findByTitleAndNotDeleted(filename)
-                             .orElseThrow(() -> new IllegalArgumentException("Файл не найден: " + filename));
+                             .orElseThrow(() -> new InvalidInputDataException("Файл не найден: " + filename));
     }
 
     public Resource getFileResource(String path) {
@@ -82,11 +90,18 @@ public class FilesService {
 
     public void updateFileTitle(String currentFileName, String newFileName) {
         FilesEntity entity = fileRepository.findByTitleAndNotDeleted(currentFileName)
-                                           .orElseThrow(() -> new IllegalArgumentException(
+                                           .orElseThrow(() -> new InvalidInputDataException(
                                                    "Файл не найден: " + currentFileName));
 
         entity.setTitle(newFileName);
         log.debug("Обновляем имя объекта {}", entity);
-        fileRepository.save(entity);
+
+        try {
+            fileRepository.save(entity);
+        } catch (Exception e) {
+            log.info("Не удалось записать в базу новое имя файла: {}", e.getMessage());
+
+            throw new FilesException("Новое имя файла не было сохранено. Причина: " + e.getMessage());
+        }
     }
 }

@@ -18,4 +18,8 @@ public class InvalidInputDataException extends RuntimeException {
 
     private String message;
     private int id;
+
+    public InvalidInputDataException(String message) {
+        this.message = message;
+    }
 }
