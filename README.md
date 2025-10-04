@@ -5,22 +5,15 @@
 <details>
 <summary><strong>Содержание</strong></summary>
 
-- [Для чего нужен "Ionov-JavaCloud" ?](#-what-can-i-do-with-hyperswitch)
-- [Quickstart (Local Setup)](#-quickstart-local-setup)
-- [Cloud Deployment](#cloud-deployment)
-- [Hosted Sandbox (No Setup Required)](#hosted-sandbox-no-setup-required)
-- [Why Hyperswitch?](#-why-hyperswitch)
-- [Architectural Overview](#architectural-overview)
-- [Our Vision](#our-vision)
-- [Community & Contributions](#community--contributions)
-- [Feature Requests & Bugs](#feature-requests--bugs)
-- [Versioning](#versioning)
-- [License](#copyright-and-license)
-- [Team Behind Hyperswitch](#team-behind-hyperswitch)
+- [Для чего нужен "Ionov-JavaCloud" ?](#---для-чего-нужен-ionov-javacloud--)
+- [Быстрый старт](#-quickstart-local-setup)
+- [Как пользоваться ?](#cloud-deployment)
+- [API Endpoints](#hosted-sandbox-no-setup-required)
+- [Тестирование?](#-why-hyperswitch)
 
 </details>
 
-<summary><h2>  📋 Для чего нужен "Ionov-JavaCloud" ? </h2></summary>
+## 📋 Для чего нужен "Ionov-JavaCloud" ?
 
 Полнофункциональное облачное хранилище файлов позволит хранить файлы на удалённом сервере и делиться ими с друзьями
 или коллегами через интернет по всему миру.
