@@ -1,6 +1,10 @@
 <h1 align="center">Ionov-JavaCloud</h1>
 <h3 align="center">REST-сервис для загрузки и управления файлами пользователей с веб-интерфейсом.</h3>
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/ionover/javaDip/main/javaDip.gif" alt="Ionov-JavaCloud demo" />
+</p>
+
 <details>
 <summary><strong>Содержание</strong></summary>
 
