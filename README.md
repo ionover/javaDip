@@ -1,12 +1,6 @@
 <h1 align="center">Ionov-JavaCloud</h1>
 <h3 align="center">REST-сервис для загрузки и управления файлами пользователей с веб-интерфейсом.</h3>
 
-https://github.com/ionover/javaDip?tab=readme-ov-file#-для-чего-нужен-ionov-javacloud-
-https://github.com/ionover/javaDip?tab=readme-ov-file#-быстрый-старт
-https://github.com/ionover/javaDip?tab=readme-ov-file#-как-пользоваться-
-https://github.com/ionover/javaDip?tab=readme-ov-file#-api-endpoints
-https://github.com/ionover/javaDip?tab=readme-ov-file#-тестирование
-
 <details>
 <summary><strong>Содержание</strong></summary>
 
