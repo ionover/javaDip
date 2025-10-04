@@ -1,15 +1,20 @@
 <h1 align="center">Ionov-JavaCloud</h1>
 <h3 align="center">REST-сервис для загрузки и управления файлами пользователей с веб-интерфейсом.</h3>
 
+https://github.com/ionover/javaDip?tab=readme-ov-file#-для-чего-нужен-ionov-javacloud-
+https://github.com/ionover/javaDip?tab=readme-ov-file#-быстрый-старт
+https://github.com/ionover/javaDip?tab=readme-ov-file#-как-пользоваться-
+https://github.com/ionover/javaDip?tab=readme-ov-file#-api-endpoints
+https://github.com/ionover/javaDip?tab=readme-ov-file#-тестирование
 
 <details>
 <summary><strong>Содержание</strong></summary>
 
-- [Для чего нужен "Ionov-JavaCloud" ?](#---для-чего-нужен-ionov-javacloud--)
-- [Быстрый старт](#-quickstart-local-setup)
-- [Как пользоваться ?](#cloud-deployment)
-- [API Endpoints](#hosted-sandbox-no-setup-required)
-- [Тестирование?](#-why-hyperswitch)
+- [Для чего нужен "Ionov-JavaCloud" ?](#-для-чего-нужен-ionov-javacloud-)
+- [Быстрый старт](#-быстрый-старт)
+- [Как пользоваться ?](#-как-пользоваться-)
+- [API Endpoints](#-api-endpoints)
+- [Тестирование?](#-тестирование)
 
 </details>
 
@@ -100,10 +105,13 @@ BACK-OPTIONS_ALLOWEDORIGIN. Введите логин пароль и добав
 
 ## 🧪 Тестирование
 
+Код покрыт unit тестами и интеграционными тестами.
+Unit тесты запускаются внутри ./startAll.sh по умолчанию
+Для запуска интеграционных тестов после ./startAll.sh дождитесь пока приложение включиться и выполните команду:
+
 ### Запуск тестов
 
 ```bash
-   cd scripts
    ./runIntegrationTests.sh
 ```
 
