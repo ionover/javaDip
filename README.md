@@ -45,19 +45,18 @@
 ```
 
 Согласовано установите корректные значения в файл docker-compose.yml переменная BACK-OPTIONS_ALLOWEDORIGIN и файл
-frontend/.env переменная VUE_APP_BASE_URL .
+frontend/.env переменная VUE_APP_BASE_URL. Затем выполните команду:
 
 ```bash
-  cd scripts
-
-  ./startAll.sh
+  cd scripts && ./startAll.sh
 ```
 
 <h3> Требования для запуска</h3>
 <details>
 <summary><strong>Требования</strong></summary>
 
-- Docker и Docker Compose
+- Docker 25 и старше
+- Docker Compose v1.39.4 и старше
 - Node 20 и старше
 - Java 17
 - Maven 3
