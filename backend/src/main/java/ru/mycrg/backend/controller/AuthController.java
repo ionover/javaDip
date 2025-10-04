@@ -58,6 +58,11 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@RequestHeader("auth-token") String authToken) {
+        authToken = authToken.trim();
+        if (authToken.startsWith("Bearer ")) {
+            authToken = authToken.replace("Bearer ", "");
+        }
+
         Optional<UserDto> userDto = userService.findByJwtToken(authToken);
         if (userDto.isPresent()) {
             UserDto user = userDto.get();
@@ -67,7 +72,7 @@ public class AuthController {
             user.setJwtToken(null);
             userService.save(user);
         } else {
-            log.info("Была попытка выйти со старым токеном: {}", authToken);
+            log.info("Была попытка выйти с неправильным токеном: {}", authToken);
         }
 
         return ResponseEntity.ok().build();

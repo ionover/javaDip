@@ -9,10 +9,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import ru.mycrg.backend.dto.FilesDto;
 import ru.mycrg.backend.dto.UpdateFilenameDto;
+import ru.mycrg.backend.dto.response.FilesDto;
 
 import java.util.List;
 
@@ -152,6 +153,29 @@ public class FilesIntegrationTest {
                 new ParameterizedTypeReference<>() {
                 }
         );
+    }
+
+    public static ResponseEntity<String> getFilesListWithBadToken(String authToken) {
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.set(AUTH_TOKEN_HEADER, "Bearer " + authToken);
+
+            HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+            // Выполняем запрос
+            return restTemplate.exchange(
+                    "http://10.10.10.61:8084/list?limit=3",
+                    GET,
+                    entity,
+                    new ParameterizedTypeReference<>() {
+                    }
+            );
+        } catch (HttpClientErrorException ex) {
+            return ResponseEntity.status(ex.getStatusCode())
+                                 .headers(ex.getResponseHeaders())
+                                 .body(ex.getResponseBodyAsString());
+        }
     }
 
     private ResponseEntity<FilesDto> addFileOnCloud(String authToken, String filename) {

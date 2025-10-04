@@ -9,6 +9,11 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(FilesException.class)
+    public ResponseEntity<FilesException> handleFilesException(FilesException ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex);
+    }
+
     @ExceptionHandler(AuthException.class)
     public ResponseEntity<AuthException> handleAuthException(AuthException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex);

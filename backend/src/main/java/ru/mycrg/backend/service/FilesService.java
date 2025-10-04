@@ -7,7 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ru.mycrg.backend.dto.FilesDto;
+import ru.mycrg.backend.dto.response.FilesDto;
 import ru.mycrg.backend.entity.FilesEntity;
 import ru.mycrg.backend.repository.FileRepository;
 import ru.mycrg.backend.util.FileUtils;

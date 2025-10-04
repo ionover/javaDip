@@ -4,22 +4,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import ru.mycrg.backend.dto.FilesDto;
 import ru.mycrg.backend.dto.LoginDto;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.HttpMethod.POST;
-import static ru.mycrg.backend.integration.FilesIntegrationTest.getFilesList;
+import static ru.mycrg.backend.integration.FilesIntegrationTest.getFilesListWithBadToken;
 
 @Testcontainers
 public class AuthIntegrationTest {
@@ -58,14 +51,13 @@ public class AuthIntegrationTest {
         //Scenario: Успешный выход с валидным токеном
         //Given я авторизован как "admin"
         //When  я делаю logout
-        //Then  сервер отвечает со статусом: 200
-        //And   запросы с тем же токеном возвращают статус 400
+        //Then  запросы с тем же токеном возвращают статус 401
         String authToken = extractTokenFromResponse(loginAsAdmin());
 
         logout(authToken);
 
-        ResponseEntity<List<FilesDto>> response = getFilesList(authToken);
-        assertTrue(response.getStatusCode().is2xxSuccessful());
+        ResponseEntity<String> response = getFilesListWithBadToken(authToken);
+        assertSame(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
 
     public static ResponseEntity<String> loginAsAdmin() {
