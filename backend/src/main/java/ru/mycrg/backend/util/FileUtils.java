@@ -1,5 +1,8 @@
 package ru.mycrg.backend.util;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class FileUtils {
     
     public static String extractExtension(String filename) {
