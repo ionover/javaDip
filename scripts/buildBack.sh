@@ -4,7 +4,7 @@ echo "Building backend..."
 cd ..
 
 echo "Running Maven clean install..."
-mvn clean install -DskipTests
+mvn clean install -Dtest="**/unit/**/*Test,**/unit/**/*Tests" -DfailIfNoTests=false
 
 echo "Backend build completed!"
 
